@@ -1,51 +1,86 @@
+{% extends 'main.html' %}
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
 
-<style>
-    #map {
-        height: calc(100vh - 80px) !important;
-    }
-</style>
-<div id="map">
-</div>
-<script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+{% block content %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-ant-path" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/css/uikit.min.css" />
 
+<body>
+<div id="mapid" class="map" style="width: 100%; height: 60vh;"></div>
 <script type="text/javascript">
-
+    //initilize the map
+    var map = L.map('mapid')
+        .setView([51.23257, 14.24618], 10)
 
     // Basemap urls
-    var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map)
+
+    var st1 = L.icon({
+        {% load static %}
+        iconUrl:'{% static '/images/icons/station1.svg' %}',
+
+        iconSize:     [19, 48], // size of the icon
+    });
+    var st2 = L.icon({
+    {% load static %}
+        iconUrl:'{% static '/images/icons/station2.svg' %}',
+
+        iconSize:     [19, 48], // size of the icon
+    });
+    var st3 = L.icon({
+    {% load static %}
+        iconUrl:'{% static '/images/icons/station3.svg' %}',
+
+        iconSize:     [19, 48], // size of the icon
+    });
+    var st1_double = L.icon({
+        {% load static %}
+        iconUrl:'{% static '/images/icons/station1_small.svg' %}',
+
+        iconSize:     [25, 50], // size of the icon
+    });
+    var st2_double = L.icon({
+    {% load static %}
+        iconUrl:'{% static '/images/icons/station2_small.svg' %}',
+
+        iconSize:     [25, 50], // size of the icon
+    });
+    var st3_double = L.icon({
+    {% load static %}
+        iconUrl:'{% static '/images/icons/station3_small.svg' %}',
+
+        iconSize:     [25, 50], // size of the icon
     });
 
-    //initilize the map
-    var map = L.map('map', {
-        layers: [osm_map] // basemap
-    }).setView([51.23257, 14.24618], 10)
-
     //Marker (Busslinie 1)
-        {% for location in Line1 %}
-            console.log({{ location.yvalue }}, {{ location.xvalue }})
-            var marker = new L.marker([{{ location.yvalue }}, {{ location.xvalue }}])
-                .addTo(map)
-                .bindPopup("<h1> Busline 1 </h1> <p> {{ location.info }} </p>");
-        {% endfor %}
+    {% for location in Line1 %}
+        console.log({{ location.yvalue }}, {{ location.xvalue }})
+        new L.marker([{{ location.yvalue }}, {{ location.xvalue }}], {icon: st1_double}).addTo(map).bindPopup("<h1> Busline 1 </h1> <p> {{ location.info }} </p>");
+    {% endfor %}
 
     //Marker (Busslinie 2)
-        {% for location in Line2 %}
-            console.log({{ location.yvalue }}, {{ location.xvalue }})
-            var marker = new L.marker([{{ location.yvalue }}, {{ location.xvalue }}])
-                .addTo(map)
-                .bindPopup("<h1> Busline 2 </h1> <p> {{ location.info }} </p>");
-        {% endfor %}
+    {% for location in Line2 %}
+        console.log({{ location.yvalue }}, {{ location.xvalue }})
+        new L.marker([{{ location.yvalue }}, {{ location.xvalue }}], {icon: st2_double})
+            .addTo(map)
+            .bindPopup("<h1> Busline 2 </h1> <p> {{ location.info }} </p>");
+    {% endfor %}
 
     //Marker (Caseritz)
-        {% for location in Caseritz %}
-            console.log({{ location.yvalue }}, {{ location.xvalue }})
-            var marker = new L.marker([{{ location.yvalue }}, {{ location.xvalue }}])
-                .addTo(map)
-                .bindPopup("<h1> Buslinie 1&2 </h1> <p> {{ location.info }} </p>");
-        {% endfor %}
+    {% for location in Caseritz %}
+        console.log({{ location.yvalue }}, {{ location.xvalue }})
+        var marker = new L.marker([{{ location.yvalue }}, {{ location.xvalue }}], {icon: st3_double})
+            .addTo(map)
+            .bindPopup("<h1> Buslinie 1&2 </h1> <p> {{ location.info }} </p>");
+    {% endfor %}
 
+
+    var polyline = L.polyline([{{ routenpunkte }}], {color: 'red'}).addTo(map);
 
 </script>
+</body>
+{% endblock content %}

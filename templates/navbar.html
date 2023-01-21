@@ -1,0 +1,52 @@
+<!-- UIkit CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/css/uikit.min.css" />
+<!-- UIkit JS -->
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.15.7/dist/js/uikit-icons.min.js"></script>
+<div class="uk-grid back1">
+    <div class="uk-width-1-2">
+        <h1 class="uk-text-light uk-margin-xlarge-left">Navigation</h1>
+    </div>
+    <div class="uk-width-1-2">
+        <h1 class="uk-text-light">Letzte Ergebnisse</h1>
+    </div>
+</div>
+
+<div class="uk-grid uk-child-width-1-2">
+    <div class="">
+        <div class="uk-margin-xlarge-left ">
+            <form method="POST" action="">
+            {%  csrf_token %}
+                <h2 class="uk-text-light uk-flex-middle uk-margin-remove-top uk-padding-remove-top uk-margin-small">Startpunkt</h2>
+                <select class="uk-select uk-width-1-2" aria-label="Select Start" name="start">
+                    {% for namen in All %}
+                        <option>{{ namen.info }} </option>
+                    {%  endfor %}
+                </select>
+                <h2 class="uk-text-light uk-align-center uk-margin-small">Endhaltestelle</h2>
+                <select class="uk-select uk-width-1-2" aria-label="Select Start" name="endstation">
+                    {% for namen in All %}
+                        <option>{{ namen.info }} </option>
+                    {%  endfor %}
+                </select>
+            <li>
+            <button class="uk-button uk-button-secondary uk-button uk-border-rounded  uk-width-1-2@m uk-margin-large uk-padding-top" type="submit" name="saferoute" value="+">+</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <div class="">
+        {% for routen in route %}
+            <div class ="uk-margin-medium-left uk-card uk-card-small uk-card-secondary uk-flex-middle uk-card-hover uk-width-5-6 uk-margin-top">
+                <div class ="uk-grid uk-margin-small">
+                    <a  class="uk-button uk-button-secondary uk-button-small uk-width-auto">Go</a>
+                    <h3 style="display: inline-block" class="uk-text-small uk-width-auto uk-margin-small-left"> Start: </h3>
+                    <h3 style="display: inline-block" class="uk-text-small uk-width-auto uk-text-bold"> {{ routen.start }}</h3>
+                    <h3 style="display: inline-block" class="uk-text-small uk-width-auto"> Ziel: </h3>
+                    <h3 style="display: inline-block" class="uk-text-small uk-width-auto uk-text-bold uk-margin-medium-right"> {{ routen.stop }}</h3>
+                </div>
+            </div>
+        {%  endfor %}
+    </div>
+    </div>
+</div>
